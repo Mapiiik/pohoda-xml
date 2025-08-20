@@ -5,7 +5,6 @@
  * Licensed under the MIT License
  * (c) RIESENIA.com
  */
-
 declare(strict_types=1);
 
 namespace Riesenia\Pohoda\Invoice;
@@ -19,11 +18,17 @@ class Item extends DocumentItem
     protected $_refElements = ['typeServiceMOSS', 'accounting', 'classificationVAT', 'classificationKVDPH', 'centre', 'activity', 'contract'];
 
     /** @var string[] */
-    protected $_elements = ['text', 'quantity', 'unit', 'coefficient', 'payVAT', 'rateVAT', 'percentVAT', 'discountPercentage', 'homeCurrency', 'foreignCurrency', 'typeServiceMOSS', 'note', 'code', 'guarantee', 'guaranteeType', 'stockItem', 'accounting', 'classificationVAT', 'classificationKVDPH', 'centre', 'activity', 'contract', 'expirationDate', 'PDP'];
+    protected $_elements = ['text', 'quantity', 'unit', 'coefficient', 'payVAT', 'rateVAT', 'percentVAT', 'discountPercentage', 'homeCurrency', 'foreignCurrency', 'typeServiceMOSS', 'note', 'code', 'guarantee', 'guaranteeType', 'stockItem', 'accounting', 'classificationVAT', 'classificationKVDPH', 'centre', 'activity', 'contract', 'expirationDate', 'PDP', 'recyclingContrib'];
 
-    /**
-     * {@inheritdoc}
-     */
+    public function __construct(array $data, string $ico, bool $resolveOptions = true)
+    {
+        if (isset($data['recyclingContrib'])) {
+            $data['recyclingContrib'] = new RecyclingContrib($data['recyclingContrib'], $ico, $resolveOptions);
+        }
+
+        parent::__construct($data, $ico, $resolveOptions);
+    }
+
     protected function _configureOptions(OptionsResolver $resolver)
     {
         parent::_configureOptions($resolver);

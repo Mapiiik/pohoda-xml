@@ -7,21 +7,21 @@
  */
 declare(strict_types=1);
 
-namespace Riesenia\Pohoda\ListRequest;
+namespace Riesenia\Pohoda\PrintRequest;
 
 use Riesenia\Pohoda\Agenda;
 use Riesenia\Pohoda\Common\OptionsResolver;
 
-class RestrictionData extends Agenda
+class BinaryData extends Agenda
 {
     /** @var string[] */
-    protected $_elements = ['liquidation'];
+    protected $_elements = ['responseXml', 'removeFile'];
 
     public function getXML(): \SimpleXMLElement
     {
-        $xml = $this->_createXML()->addChild('lst:restrictionData', '', $this->_namespace('lst'));
+        $xml = $this->_createXML()->addChild('prn:binaryData', '', $this->_namespace('prn'));
 
-        $this->_addElements($xml, $this->_elements, 'lst');
+        $this->_addElements($xml, $this->_elements, 'prn');
 
         return $xml;
     }
@@ -32,6 +32,9 @@ class RestrictionData extends Agenda
         $resolver->setDefined($this->_elements);
 
         // validate / format options
-        $resolver->setNormalizer('liquidation', $resolver->getNormalizer('bool'));
+        $resolver->setRequired('responseXml');
+
+        $resolver->setNormalizer('responseXml', $resolver->getNormalizer('bool'));
+        $resolver->setNormalizer('removeFile', $resolver->getNormalizer('bool'));
     }
 }

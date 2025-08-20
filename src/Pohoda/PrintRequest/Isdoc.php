@@ -12,16 +12,16 @@ namespace Riesenia\Pohoda\PrintRequest;
 use Riesenia\Pohoda\Agenda;
 use Riesenia\Pohoda\Common\OptionsResolver;
 
-class Filter extends Agenda
+class Isdoc extends Agenda
 {
     /** @var string[] */
-    protected $_elements = ['id'];
+    protected $_elements = ['includeToPdf', 'graphicNote'];
 
     public function getXML(): \SimpleXMLElement
     {
-        $xml = $this->_createXML()->addChild('ftr:filter', '', $this->_namespace('ftr'));
+        $xml = $this->_createXML()->addChild('prn:isdoc', '', $this->_namespace('prn'));
 
-        $this->_addElements($xml, $this->_elements, 'ftr');
+        $this->_addElements($xml, $this->_elements, 'prn');
 
         return $xml;
     }
@@ -32,6 +32,10 @@ class Filter extends Agenda
         $resolver->setDefined($this->_elements);
 
         // validate / format options
-        $resolver->setNormalizer('id', $resolver->getNormalizer('int'));
+        $resolver->setRequired('includeToPdf');
+        $resolver->setNormalizer('includeToPdf', $resolver->getNormalizer('bool'));
+
+        $resolver->setRequired('graphicNote');
+        $resolver->setAllowedValues('graphicNote', ['topRight', 'topLeft', 'bottomRight', 'bottomLeft']);
     }
 }
